@@ -10,11 +10,11 @@ SUB_DIRECTORY_KEY = 'subdirectory'
 GRAPH_ATTRIBUTES = {'splines': "ortho",
                     'esep': '20',
                     'nodesep': '1'}
-#TABLES_TO_MERGE = [('chefmozcuisine', 'chefmozparking', 'placeID'),
-#                   ('usercuisine', 'userpayment', 'userID'),]
-TABLES_TO_MERGE = []
-#TABLES_TO_GROUP = [('rating_final', 'service_rating'),
-#                   ('chefmozaccepts', 'Rpayment'),]
+TABLES_TO_MERGE = [('chefmozcuisine', 'chefmozparking', 'placeID'),
+                   ('usercuisine', 'userpayment', 'userID'),]
+#TABLES_TO_MERGE = []
+TABLES_TO_GROUP = [('rating_final', 'service_rating'),
+                   ('chefmozaccepts', 'Rpayment'),]
 
 
 class Table(object):
