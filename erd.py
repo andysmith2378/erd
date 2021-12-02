@@ -10,12 +10,20 @@ SUB_DIRECTORY_KEY = 'subdirectory'
 GRAPH_ATTRIBUTES = {'splines': "ortho",
                     'esep': '20',
                     'nodesep': '1'}
+TABLES_TO_MERGE = [('chefmozcuisine', 'chefmozparking', 'placeID'),
+                   ('usercuisine', 'userpayment', 'userID'),]
+TABLES_TO_GROUP = [('rating_final', 'service_rating'),
+                   ('chefmozaccepts', 'Rpayment'),]
 
 
 class Table(object):
     def __init__(self, identifier, keylist=None):
         self.identifier = identifier
         self.keylist = keylist
+
+    def merge(self, other, mergeKey, infix=" merged with "):
+        newName = infix.join([self.identifier, other.identifier])
+        return Table(newName, list(set(self.keylist + other.keylist)))
 
     @property
     def label(self):
@@ -33,7 +41,7 @@ if __name__ == '__main__':
                            node_attr={'shape': 'box'})
     for key, value in GRAPH_ATTRIBUTES.items():
         dot.graph_attr[key] = value
-    tables = []
+    tableDict = {}
     for filename in glob.glob(inputPath):
         tableName = os.path.splitext(os.path.basename(filename))[0].upper()
         newTable = Table(tableName)
@@ -42,8 +50,17 @@ if __name__ == '__main__':
             for row in reader:
                 newTable.keylist = list(row.keys())
                 break
-        tables.append(copy(newTable))
-        dot.node(newTable.identifier, label=newTable.label)
+        tableDict[newTable.identifier] = copy(newTable)
+    for left, right, mergeOn in TABLES_TO_MERGE:
+        leftName = left.upper()
+        rightName = right.upper()
+        mergedTables = tableDict[leftName].merge(tableDict[rightName], mergeOn)
+        tableDict[mergedTables.identifier] = mergedTables
+        del tableDict[leftName]
+        del tableDict[rightName]
+    tables = list(tableDict.values())
+    for table in tables:
+        dot.node(table.identifier, label=table.label)
     for n, tailTable in enumerate(tables):
         for headTable in tables[n+1:]:
             for key in tailTable.keylist:
