@@ -10,10 +10,11 @@ SUB_DIRECTORY_KEY = 'subdirectory'
 GRAPH_ATTRIBUTES = {'splines': "ortho",
                     'esep': '20',
                     'nodesep': '1'}
-TABLES_TO_MERGE = [('chefmozcuisine', 'chefmozparking', 'placeID'),
-                   ('usercuisine', 'userpayment', 'userID'),]
-TABLES_TO_GROUP = [('rating_final', 'service_rating'),
-                   ('chefmozaccepts', 'Rpayment'),]
+#TABLES_TO_MERGE = [('chefmozcuisine', 'chefmozparking', 'placeID'),
+#                   ('usercuisine', 'userpayment', 'userID'),]
+TABLES_TO_MERGE = []
+#TABLES_TO_GROUP = [('rating_final', 'service_rating'),
+#                   ('chefmozaccepts', 'Rpayment'),]
 
 
 class Table(object):
@@ -34,8 +35,8 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Generate an entity relationship diagram from files in a subdirectory')
     parser.add_argument(SUB_DIRECTORY_KEY, type=str, nargs=1,
                         help='relative path of subdirectory')
-    #args = parser.parse_args(['csvfiles'])
-    args = parser.parse_args()
+    args = parser.parse_args(['csvfiles'])
+    #args = parser.parse_args()
     inputPath = os.path.join('.', getattr(args, SUB_DIRECTORY_KEY)[0], '*.csv')
     dot = graphviz.Digraph('ERD', format='png',
                            comment='Entity Relationship Diagram',
@@ -46,7 +47,7 @@ if __name__ == '__main__':
     for filename in glob.glob(inputPath):
         tableName = os.path.splitext(os.path.basename(filename))[0].upper()
         newTable = Table(tableName)
-        with open(filename, newline='') as csvfile:
+        with open(filename, newline='', encoding='utf-8-sig') as csvfile:
             reader = csv.DictReader(csvfile, delimiter=',', quotechar='"')
             for row in reader:
                 newTable.keylist = list(row.keys())
