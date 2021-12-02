@@ -34,7 +34,8 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Generate an entity relationship diagram from files in a subdirectory')
     parser.add_argument(SUB_DIRECTORY_KEY, type=str, nargs=1,
                         help='relative path of subdirectory')
-    args = parser.parse_args(['csvfiles'])
+    #args = parser.parse_args(['csvfiles'])
+    args = parser.parse_args()
     inputPath = os.path.join('.', getattr(args, SUB_DIRECTORY_KEY)[0], '*.csv')
     dot = graphviz.Digraph('ERD', format='png',
                            comment='Entity Relationship Diagram',
